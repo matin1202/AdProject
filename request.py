@@ -23,7 +23,6 @@ def requestShortWeather():
     response = requests.get(shortAPIUrl, params=params)
     parse = ET.fromstring(response.content.split(sep=b'</header>')[1].split(sep=b'</response>')[0])
     dom = xml.dom.minidom.parseString(response.content)
-    print(dom.toprettyxml())
     items = parse.findall('items/item')
     result = []
     return items
@@ -55,6 +54,7 @@ def requestWeatherStatus():
     shortWeather = requestShortWeather()
     middleWeather = requestMiddleWeather()
     dataSet: list[data_set] = [data_set.dataSet(QDate.currentDate().addDays(x)) for x in range(8)]
+    data_set.shortXml2DataSet(shortWeather, dataSet)
     dataSet = data_set.middleXml2DataSet(middleWeather, dataSet)
     for i in dataSet:
         print(str(i))
