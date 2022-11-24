@@ -59,7 +59,7 @@ if __name__ == '__main__':
 
     test()
 
-    #app = QApplication(sys.argv)
-    #calc = MainUI()
-    #calc.show()
-    #sys.exit(app.exec_())
+    # app = QApplication(sys.argv)
+    # calc = MainUI()
+    # calc.show()
+    # sys.exit(app.exec_())
