@@ -50,14 +50,15 @@ def requestMiddleWeather():
     return result
 
 
-def requestWeatherStatus():
+def requestWeatherStatus() -> list[data_set.dataSet]:
     shortWeather = requestShortWeather()
     middleWeather = requestMiddleWeather()
-    dataSet: list[data_set] = [data_set.dataSet(QDate.currentDate().addDays(x)) for x in range(8)]
+    dataSet: list[data_set.dataSet] = [data_set.dataSet(QDate.currentDate().addDays(x)) for x in range(8)]
     data_set.shortXml2DataSet(shortWeather, dataSet)
     dataSet = data_set.middleXml2DataSet(middleWeather, dataSet)
     for i in dataSet:
         print(str(i))
+    return dataSet
 
 
 def getTemp(elements: list[xml.etree.ElementTree.Element]) -> list[int]:

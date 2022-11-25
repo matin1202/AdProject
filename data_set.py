@@ -5,6 +5,7 @@ from PyQt5.QtCore import QDate
 
 
 class dataSet:
+
     def __init__(self, date: QDate) -> None:
         self.date: QDate = date
         self.minTemp: int = sys.maxsize
