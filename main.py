@@ -2,14 +2,18 @@ import traceback
 
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *   # 이미지 넣기 위해
 
 import data_set
 import request
+import phrase   # 명언 리스트
+import information  # 옷차림, 준비물
+import chooseimage  # 날씨 이미지
 
 
 class MainUI(QWidget):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, *args):
+        super().__init__(*args)
 
         self.dataSet: list[data_set.dataSet] = request.requestWeatherStatus()
 
@@ -27,16 +31,23 @@ class MainUI(QWidget):
 
         self.calendar.setDateRange(today, aWeekLater)
         self.calendar.selectionChanged.connect(self.changed)
+        self.calendar.setFixedSize(QSize(400, 400))
 
-        self.proverb = QLabel("여기에 격언 표시")
-        self.proverb.setAlignment(Qt.AlignCenter)
+        self.information = QTextEdit(self)  # 옷차림, 준비물 나타낼 곳
+        self.information.setFixedSize(QSize(400, 200))
+
+        vBox.addWidget(self.calendar)
+        vBox.addWidget(self.information)
 
         vBox2 = QGridLayout()
         self.label: list[MyLabel] = []
 
         for data in self.dataSet:
             if data == self.calendar.selectedDate().toString('yyyyMMdd'):
+                self.showInformation(data)
                 self.label = [
+                    MyImageLabel(chooseimage.chooseImg(data)),
+                    MyLabel(phrase.randomPhrase()),
                     MyLabel("평균 " + str(int((data.maxTemp + data.minTemp) / 2)) + "도"),
                     MyLabel("강수 확률 " + str(data.rainProb) + "%"),
                     MyLabel("최고 " + str(data.maxTemp) + "도"),
@@ -47,9 +58,6 @@ class MainUI(QWidget):
 
         for i in range(len(self.label)):
             vBox2.addWidget(self.label[i], i // 2, i % 2)
-
-        vBox.addWidget(self.calendar)
-        vBox.addWidget(self.proverb)
         hLayout.addLayout(vBox)
         hLayout.addLayout(vBox2)
 
@@ -60,11 +68,13 @@ class MainUI(QWidget):
         self.setWindowTitle("날씨 조회")
 
     def changed(self):
-        date = self.calendar.selectedDate()
         label = []
         for data_ in self.dataSet:
             if data_ == self.calendar.selectedDate().toString('yyyyMMdd'):
+                self.showInformation(data_)
                 label = [
+                    chooseimage.chooseImg(data_),
+                    phrase.randomPhrase(),
                     "평균 " + str(int((data_.maxTemp + data_.minTemp) / 2)) + "도",
                     "강수 확률 " + str(data_.rainProb) + "%",
                     "최고 " + str(data_.maxTemp) + "도",
@@ -75,13 +85,42 @@ class MainUI(QWidget):
         for la in range(len(label)):
             self.label[la].setText(label[la])
 
+    def showInformation(self, data_: data_set.dataSet):
+        self.information.clear()
+        clothesInfo = "추천 옷차림: " + information.clothes(int((data_.maxTemp + data_.minTemp) / 2))     # 최고기온, 최저기온 평균내서 함수 매개변수로 집어넣기
+        self.information.append(clothesInfo)
+        etcInfo = "추천 준비물: " + information.etc(data_)    # 온도나 비, 눈 등에 따른 추천 준비물/ 온도, 강수확률을 매개변수로 넣기
+        self.information.append(etcInfo)
+
 
 class MyLabel(QLabel):
     def __init__(self, text):
         super().__init__()
         self.setText(str(text))
+        self.setFont(QFont("나눔", 11))
         self.setAlignment(Qt.AlignCenter)
-        self.setFixedSize(QSize(120, 40))
+        self.setFixedSize(QSize(160, 160))
+        self.setWordWrap(True)
+
+
+class MyImageLabel(QLabel):
+
+    def __init__(self, url, *__args):
+        super().__init__(*__args)
+        pixmap = QPixmap()
+        pixmap.load(url)
+        pixmap = pixmap.scaledToWidth(160)
+        self.setPixmap(pixmap)
+        self.setContentsMargins(10, 10, 10, 10)
+        self.resize(pixmap.width(), pixmap.height())
+
+    def setText(self, p_str):
+        pixmap = QPixmap()
+        pixmap.load(p_str)
+        pixmap = pixmap.scaledToWidth(160)
+        self.setPixmap(pixmap)
+        self.setContentsMargins(10, 10, 10, 10)
+        self.resize(pixmap.width(), pixmap.height())
 
 
 def test():
