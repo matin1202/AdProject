@@ -1,5 +1,4 @@
 import time
-import data_set
 import requests
 import xml.etree.ElementTree as ET
 import xml.dom.minidom
@@ -9,7 +8,7 @@ from PyQt5.QtCore import QDate
 
 import data_set
 
-shortAPICode = 'twI24Zuj+zOnrIovSaQLBosqt9GcqiA5IiLKurTshh3XwJ1xwSV8spaWWg6x8hHntYIRPGTUCCWcy+zHAeIR2g=='
+shortAPICode = """twI24Zuj+zOnrIovSaQLBosqt9GcqiA5IiLKurTshh3XwJ1xwSV8spaWWg6x8hHntYIRPGTUCCWcy+zHAeIR2g=="""
 shortAPIUrl = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst"
 middleAPICode = "twI24Zuj+zOnrIovSaQLBosqt9GcqiA5IiLKurTshh3XwJ1xwSV8spaWWg6x8hHntYIRPGTUCCWcy+zHAeIR2g=="
 middleTempAPIUrl = "http://apis.data.go.kr/1360000/MidFcstInfoService/getMidTa"
@@ -22,9 +21,8 @@ def requestShortWeather():
 
     response = requests.get(shortAPIUrl, params=params)
     parse = ET.fromstring(response.content.split(sep=b'</header>')[1].split(sep=b'</response>')[0])
-    dom = xml.dom.minidom.parseString(response.content)
+    # dom = xml.dom.minidom.parseString(response.content)
     items = parse.findall('items/item')
-    result = []
     return items
 
 
@@ -36,14 +34,14 @@ def requestMiddleWeather():
 
     temp_response = requests.get(middleTempAPIUrl, params=temp_params)
     temp_parse = ET.fromstring(temp_response.content.split(sep=b'</header>')[1].split(sep=b'</response>')[0])
-    temp_dom = xml.dom.minidom.parseString(temp_response.content)
+    # temp_dom = xml.dom.minidom.parseString(temp_response.content)
     temp_items = temp_parse.findall('items/item')
 
     time.sleep(0.1)
 
     weather_response = requests.get(middleWeatherAPIUrl, params=weather_params)
     weather_parse = ET.fromstring(weather_response.content.split(sep=b'</header>')[1].split(sep=b'</response>')[0])
-    weather_dom = xml.dom.minidom.parseString(weather_response.content)
+    # weather_dom = xml.dom.minidom.parseString(weather_response.content)
     weather_items = weather_parse.findall('items/item')
 
     result = temp_items + weather_items
