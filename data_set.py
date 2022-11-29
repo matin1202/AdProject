@@ -6,13 +6,14 @@ from PyQt5.QtCore import QDate
 
 class dataSet:
 
-    def __init__(self, date: QDate) -> None:
+    def __init__(self, date: QDate, minTemp: int = sys.maxsize, maxTemp: int = -sys.maxsize, am_weather: str = "Unknown"
+                 , pm_weather: str = "Unknown", rainProb: int = -1) -> None:
         self.date: QDate = date
-        self.minTemp: int = sys.maxsize
-        self.maxTemp: int = -sys.maxsize
-        self.am_weather: str = "Unknown"
-        self.pm_weather: str = "Unknown"
-        self.rainProb: int = -1
+        self.minTemp: int = minTemp
+        self.maxTemp: int = maxTemp
+        self.am_weather: str = am_weather
+        self.pm_weather: str = pm_weather
+        self.rainProb: int = rainProb
 
     def __str__(self):
         return self.date.toString('yyyy년 MM월 dd일') + ", 최저 온도 : " + str(self.minTemp)\

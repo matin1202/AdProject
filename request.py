@@ -42,6 +42,7 @@ def requestMiddleWeather():
     weather_response = requests.get(middleWeatherAPIUrl, params=weather_params)
     weather_parse = ET.fromstring(weather_response.content.split(sep=b'</header>')[1].split(sep=b'</response>')[0])
     # weather_dom = xml.dom.minidom.parseString(weather_response.content)
+    # print(weather_dom.toprettyxml())
     weather_items = weather_parse.findall('items/item')
 
     result = temp_items + weather_items
@@ -59,9 +60,9 @@ def requestWeatherStatus() -> list[data_set.dataSet]:
     return dataSet
 
 
-def getTemp(elements: list[xml.etree.ElementTree.Element]) -> list[int]:
-    result: list[int] = []
-    for i in elements:
-        if i.find('category').text == 'TMP':
-            result.append(int(i.find('fcstValue').text))
-    return result
+# def getTemp(elements: list[xml.etree.ElementTree.Element]) -> list[int]:
+#     result: list[int] = []
+#     for i in elements:
+#         if i.find('category').text == 'TMP':
+#             result.append(int(i.find('fcstValue').text))
+#     return result
