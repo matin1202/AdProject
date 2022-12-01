@@ -1,7 +1,7 @@
 import data_set
 
 
-def chooseImg(data_: data_set.dataSet) -> str:
+def chooseImg(data_: data_set.dataSet) -> str:  # 입력 받은 am, pm 날씨에 따른 날씨 이미지 출력
     weather = [data_.am_weather, data_.pm_weather]
     if "흐리고 눈" in weather or "눈" in weather:
         return "images/snowy.png"

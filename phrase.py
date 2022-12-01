@@ -67,5 +67,5 @@ phrase = [
 ]
 
 
-def randomPhrase():
+def randomPhrase():     # 무작위 명언 출력
     return random.choice(phrase)

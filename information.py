@@ -1,7 +1,7 @@
 import data_set
 
 
-def clothes(temperature):
+def clothes(temperature):   # 기온을 입력 받아 의상 추천
     if temperature >= 28:
         return "cloth = 린넨 옷 \ntop = 민소매, 반팔 \nbottom = 반바지, 짧은 치마"
     elif temperature >= 23:
@@ -20,7 +20,7 @@ def clothes(temperature):
         return "cloth = 누빔 옷\nouter = 패딩, 두꺼운 코트\netc = 기모, 목도리"
 
 
-def etc(weather: data_set.dataSet):
+def etc(weather: data_set.dataSet):  # 기온 및 날씨를 입력 받아 준비물 추천
     temp = int((weather.minTemp + weather.maxTemp) / 2)
     if weather.rainProb >= 65:
         return "우산을 챙기는 것을 추천드립니다."
